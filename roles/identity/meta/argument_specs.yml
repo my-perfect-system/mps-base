@@ -1,0 +1,137 @@
+---
+argument_specs:
+  main:
+    short_description: Shared identity model for the mps.* ecosystem
+    description:
+      - Resolves users from users_catalog + users_list into a unified structure.
+      - Produces identity_users_resolved, identity_users_present, identity_users_absent, identity_user_groups.
+      - Declared as a meta dependency by every per-user role in mps.* ecosystem.
+      - Callers pass users_catalog and users_list as role vars; they flow through the play scope
+        to this role via the dependency chain.
+    options:
+      users_catalog:
+        type: dict
+        required: false
+        default: {}
+        description:
+          - Identity catalog keyed by a free-form unique id. Keys are NOT validated against
+            a fixed set; they are only used to reference entries from users_list.
+          - The real OS username is taken from each entry's name field. If name is omitted,
+            it defaults to the catalog key (the unique id).
+          - Each value is a dict describing a single user entity. The supported schema is
+            documented under the options block below.
+        options:
+          name:
+            type: str
+            required: false
+            description:
+              - OS username. Defaults to the catalog key (the unique id) when omitted.
+          uid:
+            type: int
+            required: false
+            description: Numeric UID. Omit to let the OS pick.
+          group:
+            type: str
+            required: false
+            description: Primary group name. Created automatically if not present.
+          groups:
+            type: list
+            required: false
+            elements: str
+            description: Supplementary group memberships to add to the user.
+          append_groups:
+            type: bool
+            required: false
+            description: When true, append to existing group memberships; when false, replace.
+          comment:
+            type: str
+            required: false
+            description: GECOS field (human-readable name / description).
+          shell:
+            type: str
+            required: false
+            description: Login shell (absolute path).
+          home:
+            type: str
+            required: false
+            description: Home directory path.
+          create_home:
+            type: bool
+            required: false
+            description: Whether to create the home directory.
+          system:
+            type: bool
+            required: false
+            description: Create as a system account (UID below SYS_UID_MAX).
+          expires:
+            type: float
+            required: false
+            description: Account expiry epoch. Use -1 to disable expiry.
+          password:
+            type: str
+            required: false
+            description:
+              - Plaintext password. If empty, a random password is generated.
+              - mps.users.users hashes it with sha512 before passing to the user module.
+          ssh_keys:
+            type: list
+            required: false
+            elements: dict
+            description:
+              - Per-user SSH private/public key files to deploy to ~/.ssh/.
+              - Each entry supports the keys: name (str), content (str, optional), path (str, optional).
+          authorized_keys:
+            type: list
+            required: false
+            elements: dict
+            description:
+              - Public keys to concatenate into ~/.ssh/authorized_keys.
+              - Each entry supports the keys: content (str, optional), path (str, optional).
+          sudo:
+            type: dict
+            required: false
+            description:
+              - Sudoers configuration for this user. See mps.users.sudo for full semantics.
+            options:
+              nopasswd:
+                type: bool
+                required: false
+                description: Allow passwordless sudo for matched command aliases.
+              group:
+                type: bool
+                required: false
+                description: Add / remove the user from the system `sudo` group.
+              macros:
+                type: list
+                required: false
+                elements: str
+                description: Names of sudo_macros Cmnd_Aliases to grant to this user.
+          user_roles:
+            type: dict
+            required: false
+            description:
+              - Per-user role opt-in flags. Each key is a `<collection>_<role>` flag
+                (e.g. terminal_bash, desktop_qtile, development_opencode). Per-user roles
+                filter identity_users_resolved by these flags.
+              - Reference user_roles_default / user_roles_minimal from defaults to
+                opt into a standard role set.
+      users_list:
+        type: list
+        required: false
+        default: []
+        description:
+          - Assignment list. Each entry references a users_catalog key via name and sets state.
+          - No other fields are read from users_list entries; all identity comes from the catalog.
+        elements: dict
+        options:
+          name:
+            type: str
+            required: true
+            description:
+              - Unique id of the user. Must match a key in users_catalog.
+              - The actual OS username is read from the catalog entry's name field (defaulting to this id).
+          state:
+            type: str
+            choices: [present, absent]
+            default: present
+            description: Whether the user should exist on this host.

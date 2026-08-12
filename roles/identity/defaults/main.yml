@@ -1,19 +1,135 @@
 ---
-# Shared identity model — consumed by all per-user roles across the mps.* ecosystem.
+# ---------------------------------------------------------------------------
+# Shared identity model — consumed by all per-user roles across mps.* ecosystem
+# ---------------------------------------------------------------------------
 #
 # users_catalog: dict keyed by a free-form unique id, holding all identity
-#   fields (name, uid, group, shell, home, password, ssh_keys, sudo, user_roles, ...).
-#   The real OS username is taken from each entry's `name` field (defaulting to
-#   the catalog key when omitted). Defined once, shared across all hosts.
+#   fields per user (name, uid, group, shell, home, password, ssh_keys, sudo,
+#   user_roles, ...). The real OS username is taken from each entry's `name`
+#   field (defaulting to the catalog key when omitted). One entry per user.
 #
 # users_list: per-host/per-group list of {name, state} pairs referencing
-#   users_catalog entries by their unique id. No overrides; if a user needs
+#   users_catalog entries by their unique id. No overrides. If a user needs
 #   different settings on a host, create a separate catalog entry with a
 #   different id.
 #
-#   Each entry may also carry a `user_roles` dict (sourced from the catalog
-#   entry) — e.g. `terminal_bash: true`, `desktop_qtile: true`. Per-user roles
-#   opt-in to a user via these flags.
+# Each entry may also carry a `user_roles` dict (sourced from the catalog
+# entry) — e.g. `terminal_bash: true`, `desktop_qtile: true`. Per-user roles
+# opt in to a user via these flags.
+#
+# ---------------------------------------------------------------------------
+# Per-user field defaults — referenced inside catalog entries below
+# ---------------------------------------------------------------------------
+user_shell: /bin/bash
+user_create_home: true
+user_system: false
+user_expires: -1
+user_groups: []
+admin_groups: ["admin", "config"]
+user_append_groups: true
+user_password: "changeme"
 
+# ---------------------------------------------------------------------------
+# user_roles_default — global default per-user role set
+# ---------------------------------------------------------------------------
+user_roles_default:
+  terminal_bash: true
+  terminal_vim: true
+  terminal_nvim: true
+  terminal_tmux: true
+  terminal_kitty: true
+  terminal_python: true
+  terminal_rust: true
+  terminal_scripts: true
+  desktop_essentials: true
+  desktop_wm: true
+  desktop_rofi: true
+  desktop_qtile: true
+  desktop_thunar: true
+  desktop_kanata: true
+  backup_backup: true
+  development_opencode: true
+  development_lmstudio: true
+  development_espidf: true
+  development_dotnet: true
+  development_java: true
+  development_latex: true
+  development_unity: true
+
+user_roles_minimal:
+  terminal_bash: true
+  terminal_vim: true
+
+# ---------------------------------------------------------------------------
+# users_catalog — identity catalog (empty by default, override per host)
+# ---------------------------------------------------------------------------
+# Example shape:
+#
+# users_catalog:
+#   default_root:
+#     name: "root"
+#     comment: "root"
+#     password: "rootpass"
+#     home: /root/
+#     group: "root"
+#     groups: "{{ user_groups }}"
+#     system: true
+#     shell: "{{ user_shell }}"
+#     create_home: "{{ user_create_home }}"
+#     expires: "{{ user_expires }}"
+#     append_groups: "{{ user_append_groups }}"
+#     user_roles: "{{ user_roles_default }}"
+#
+#   deploy:
+#     name: "deploy"
+#     comment: "deploy"
+#     password: "deploypass"
+#     group: "deploy"
+#     groups: "{{ admin_groups }}"
+#     home: /home/deploy
+#     system: "{{ user_system }}"
+#     shell: "{{ user_shell }}"
+#     create_home: "{{ user_create_home }}"
+#     expires: "{{ user_expires }}"
+#     append_groups: "{{ user_append_groups }}"
+#     sudo:
+#       nopasswd: true
+#       group: true
+#     user_roles: "{{ user_roles_minimal }}"
+#
+#   user1:
+#     name: "user1"
+#     comment: "user1"
+#     password: "user1pass"
+#     group: "user1"
+#     groups: "{{ admin_groups }}"
+#     home: /home/user1
+#     system: "{{ user_system }}"
+#     shell: "{{ user_shell }}"
+#     create_home: "{{ user_create_home }}"
+#     expires: "{{ user_expires }}"
+#     append_groups: "{{ user_append_groups }}"
+#     sudo:
+#       nopasswd: false
+#       group: true
+#       macros:
+#         - ADMIN_DEFAULT
+#         - ADMIN_DEBUG
+#     user_roles: "{{ user_roles_default }}"
 users_catalog: {}
+
+# ---------------------------------------------------------------------------
+# users_list — per-host/per-group assignment list (empty by default)
+# ---------------------------------------------------------------------------
+# Example shape:
+#
+# users_list:
+#   - name: default_root
+#     state: present
+#   - name: user1
+#     state: present
+#   - name: deploy
+#     state: present
+#   - name: old_user
+#     state: absent
 users_list: []
