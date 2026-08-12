@@ -2,7 +2,7 @@
 namespace: odem
 name: base
 version: 0.3.1
-readme: galaxy.yml
+readme: README.md
 authors:
   - foo <bar@baz.com>
 description: Shared conventions and dependency anchor for the odem.* collection ecosystem
@@ -17,8 +17,8 @@ documentation: https://github.com/my-perfect-system/odem-base
 homepage: https://github.com/my-perfect-system/odem-base
 issues: https://github.com/my-perfect-system/odem-base/issues
 build_ignore:
-  .ansible-lint
-  .yamllint
+  - .ansible-lint
+  - .yamllint
   - .git
   - .github
   - .gitignore
