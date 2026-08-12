@@ -16,8 +16,8 @@ See [`galaxy.yml`](galaxy.yml) for the canonical values.
 
 | Role | Description |
 |---|---|
-| `mps.base.identity` | Shared per-user identity model. Produces the `identity_users_*` facts every per-user role depends on. |
-| `mps.base.assert_debian13` | Fail-fast assertion that target host runs Debian 13 (trixie). Used as a meta dependency by every role that requires Debian 13. |
+| [`mps.base.identity`](roles/identity/README.md) | Shared per-user identity model. Produces the `identity_users_*` facts every per-user role depends on. |
+| [`mps.base.assert_debian13`](roles/assert_debian13/README.md) | Fail-fast assertion that target host runs Debian 13 (trixie). Used as a meta dependency by every role that requires Debian 13. |
 
 ## Filter plugins
 
