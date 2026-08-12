@@ -1,0 +1,19 @@
+---
+# Shared identity model — consumed by all per-user roles across the mps.* ecosystem.
+#
+# users_catalog: dict keyed by a free-form unique id, holding all identity
+#   fields (name, uid, group, shell, home, password, ssh_keys, sudo, user_roles, ...).
+#   The real OS username is taken from each entry's `name` field (defaulting to
+#   the catalog key when omitted). Defined once, shared across all hosts.
+#
+# users_list: per-host/per-group list of {name, state} pairs referencing
+#   users_catalog entries by their unique id. No overrides; if a user needs
+#   different settings on a host, create a separate catalog entry with a
+#   different id.
+#
+#   Each entry may also carry a `user_roles` dict (sourced from the catalog
+#   entry) — e.g. `terminal_bash: true`, `desktop_qtile: true`. Per-user roles
+#   opt-in to a user via these flags.
+
+users_catalog: {}
+users_list: []

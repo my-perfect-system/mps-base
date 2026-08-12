@@ -1,0 +1,53 @@
+---
+# Shared resolve protocol for per-user roles.
+#
+# Per-user roles depend on mps.base.identity. This role:
+#   1. Validates that each entry in users_list has a matching users_catalog entry
+#   2. Resolves users into a unified structure: identity_users_resolved
+#   3. Splits into present/absent lists
+#
+# Each consuming role then filters identity_users_resolved by its own
+# user_roles.<key> flag (e.g. terminal_bash, desktop_qtile) inline in its
+# task loops — no per-role resolve.yml needed.
+#
+# Outputs:
+#   identity_users_resolved  — list of dicts, one per users_list entry:
+#     - id:          catalog key
+#     - name:        OS username (catalog_entry.name or id)
+#     - state:       "present" or "absent"
+#     - user_roles:  dict from catalog entry (default {})
+#     - ...all other fields from the catalog entry are preserved
+#   identity_users_present   — identity_users_resolved filtered to state == 'present'
+#   identity_users_absent    — identity_users_resolved filtered to state == 'absent'
+
+- name: IDENTITY - Validate users_catalog references
+  ansible.builtin.assert:
+    that:
+      - "item.name in users_catalog"
+    quiet: true
+    fail_msg: "user '{{ item.name }}' in users_list has no entry in users_catalog"
+  loop: "{{ users_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.state | default('present') == 'present'
+
+- name: IDENTITY - Resolve users from catalog
+  ansible.builtin.set_fact:
+    identity_users_resolved: >-
+      {%- set result = [] -%}
+      {%- for entry in users_list -%}
+      {%-   set catalog_entry = users_catalog[entry.name] -%}
+      {%-   set resolved_entry = catalog_entry | combine({
+        'id': entry.name,
+        'name': (catalog_entry.name | default(entry.name)),
+        'state': (entry.state | default('present')),
+        'user_roles': (catalog_entry.user_roles | default({}))
+      }) -%}
+      {%-   set _ = result.append(resolved_entry) -%}
+      {%-   endfor -%}
+      {{ result }}
+
+- name: IDENTITY - Split users into present/absent
+  ansible.builtin.set_fact:
+    identity_users_present: "{{ identity_users_resolved | selectattr('state', 'equalto', 'present') | list }}"
+    identity_users_absent: "{{ identity_users_resolved | selectattr('state', 'equalto', 'absent') | list }}"

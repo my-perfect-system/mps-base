@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: foo <bar@baz.com>
+  description: "Shared identity model — users_catalog, users_list, and resolve protocol for per-user roles"
+  min_ansible_version: "2.16.0"
+  license: GPL-3.0-or-later
+  platforms:
+    - name: Debian
+      versions:
+        - trixie
+  galaxy_tags:
+    - mps
+    - base
+    - identity
+dependencies: []
