@@ -1,7 +1,7 @@
 ---
 namespace: mps
 name: base
-version: 0.1.0
+version: 0.3.1
 readme: galaxy.yml
 authors:
   - foo <bar@baz.com>
