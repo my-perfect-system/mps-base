@@ -2,6 +2,7 @@
 namespace: mps
 name: base
 version: 0.1.0
+readme: README.md
 authors:
   - foo <bar@baz.com>
 description: Shared conventions and dependency anchor for the mps.* collection ecosystem
