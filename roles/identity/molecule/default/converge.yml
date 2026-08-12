@@ -1,0 +1,15 @@
+---
+# Minimal converge: invoke the role with default vars + a synthetic user
+# so identity-resolved consumers see something without enabling all roles.
+
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    users_catalog:
+      molecule_user:
+        user_roles: {}
+    users_list:
+      - name: molecule_user
+  roles:
+    - role: mps.base.identity

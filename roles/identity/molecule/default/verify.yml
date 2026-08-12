@@ -1,0 +1,12 @@
+---
+# Default verify: smoke-test passes if converge completed without error.
+# Replace with role-specific assertions (stat / package / command) when
+# adding semantic tests.
+
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Converge completed successfully
+      ansible.builtin.debug:
+        msg: "Smoke test for mps.base.identity passed (converge ran without error)."
