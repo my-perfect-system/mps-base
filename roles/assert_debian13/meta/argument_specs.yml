@@ -1,0 +1,6 @@
+---
+argument_specs:
+  main:
+    short_description: Fail-fast assertion that target host is Debian 13 (trixie).
+    description: Used as a meta dependency by roles that require Debian 13. The single
+      assertion is run before the dependent role's main tasks.

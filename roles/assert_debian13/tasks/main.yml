@@ -1,0 +1,16 @@
+---
+# Assert that the target host runs Debian 13 (trixie).
+#
+# Roles that depend on this via meta/main.yml will fail fast on
+# non-Debian-13 hosts instead of producing a half-configured system.
+#
+# Single point of truth — was previously duplicated as an inline
+# assert in 7 role main.ymls.
+
+- name: Assert Debian 13 target
+  ansible.builtin.assert:
+    that:
+      - ansible_facts["distribution"] == "Debian"
+      - ansible_facts["distribution_major_version"] | int == 13
+    fail_msg: "This role supports Debian 13 (trixie) only"
+    quiet: true
