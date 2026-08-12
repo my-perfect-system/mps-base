@@ -1,0 +1,27 @@
+---
+# Shared conventions for all mps.* collections
+
+# File permissions
+mps_default_file_mode: "0600"
+mps_default_dir_mode: "0700"
+mps_default_script_mode: "0700"
+
+# Toggle variable pattern
+# Every yes/no subcomponent toggle uses: <role>_enable_<component>: bool
+# Example: bash_enable_aliases: true
+
+# Role structure
+#   tasks/main.yml        -> include_tasks for resolve / install / configure
+#   tasks/resolve.yml     -> user resolution + user_roles filtering (per-user roles)
+#   tasks/install.yml     -> system package installation
+#   tasks/configure.yml   -> per-user config deployment
+
+# Per-user role resolve protocol
+#   1. Validate: assert item.name in users_catalog
+#   2. Resolve: combine catalog entry with id/name/state/user_roles
+#   3. Split: filter into *_present (state=present AND role enabled) and *_absent
+#   User roles are opt-in via user_roles.<key>: true in catalog entries.
+
+# Ownership in user home directories
+#   owner: "{{ entity.name }}"
+#   group: "{{ entity.group | default(entity.name) }}"

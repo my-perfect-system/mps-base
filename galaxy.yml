@@ -1,0 +1,22 @@
+---
+namespace: mps
+name: base
+version: 0.1.0
+authors:
+  - foo <bar@baz.com>
+description: Shared conventions and dependency anchor for the mps.* collection ecosystem
+license:
+  - GPL-3.0-or-later
+tags:
+  - mps
+  - base
+  - conventions
+repository: https://github.com/my-perfect-system/mps-base
+documentation: https://github.com/my-perfect-system/mps-base
+homepage: https://github.com/my-perfect-system/mps-base
+issues: https://github.com/my-perfect-system/mps-base/issues
+build_ignore:
+  - .git
+  - .github
+  - .gitignore
+  - "*.tar.gz"
