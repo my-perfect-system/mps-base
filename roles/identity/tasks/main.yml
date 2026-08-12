@@ -11,6 +11,9 @@
 # user_roles.<key> flag (e.g. terminal_bash, desktop_qtile) inline in its
 # task loops — no per-role resolve.yml needed.
 #
+# Data-shaping logic lives in mps-base/filter_plugins/mps_filter_users.py.
+# This file is just the orchestrator.
+#
 # Outputs:
 #   identity_users_resolved  — list of dicts, one per users_list entry:
 #     - id:          catalog key
@@ -36,19 +39,7 @@
 
 - name: Resolve users from catalog
   ansible.builtin.set_fact:
-    identity_users_resolved: >-
-      {%- set result = [] -%}
-      {%- for entry in users_list -%}
-      {%-   set catalog_entry = users_catalog[entry.name] -%}
-      {%-   set resolved_entry = catalog_entry | combine({
-        'id': entry.name,
-        'name': (catalog_entry.name | default(entry.name)),
-        'state': (entry.state | default('present')),
-        'user_roles': (catalog_entry.user_roles | default({}))
-      }) -%}
-      {%-   set _ = result.append(resolved_entry) -%}
-      {%-   endfor -%}
-      {{ result }}
+    identity_users_resolved: "{{ users_list | mps_resolve_users(users_catalog) }}"
 
 - name: Split users into present and absent lists
   ansible.builtin.set_fact:
@@ -57,14 +48,4 @@
 
 - name: Extract group names from present users
   ansible.builtin.set_fact:
-    identity_user_groups: >-
-      {%- set names = [] -%}
-      {%- for u in identity_users_present -%}
-      {%-   if u.group is defined -%}
-      {%-     set _ = names.append(u.group) -%}
-      {%-   endif -%}
-      {%-   for g in (u.groups | default([])) -%}
-      {%-     set _ = names.append(g) -%}
-      {%-   endfor -%}
-      {%- endfor -%}
-      {{ names | unique }}
+    identity_user_groups: "{{ identity_users_present | mps_user_groups }}"
