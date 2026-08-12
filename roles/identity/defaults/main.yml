@@ -1,6 +1,6 @@
 ---
 # ---------------------------------------------------------------------------
-# Shared identity model — consumed by all per-user roles across mps.* ecosystem
+# Shared identity model — consumed by all per-user roles across odem.* ecosystem
 # ---------------------------------------------------------------------------
 #
 # users_catalog: dict keyed by a free-form unique id, holding all identity

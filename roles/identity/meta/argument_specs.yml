@@ -1,11 +1,11 @@
 ---
 argument_specs:
   main:
-    short_description: Shared identity model for the mps.* ecosystem
+    short_description: Shared identity model for the odem.* ecosystem
     description:
       - Resolves users from users_catalog + users_list into a unified structure.
       - Produces identity_users_resolved, identity_users_present, identity_users_absent, identity_user_groups.
-      - Declared as a meta dependency by every per-user role in mps.* ecosystem.
+      - Declared as a meta dependency by every per-user role in odem.* ecosystem.
       - Callers pass users_catalog and users_list as role vars; they flow through the play scope
         to this role via the dependency chain.
     options:
@@ -72,7 +72,7 @@ argument_specs:
             required: false
             description:
               - Plaintext password. If empty, a random password is generated.
-              - mps.users.users hashes it with sha512 before passing to the user module.
+              - odem.users.users hashes it with sha512 before passing to the user module.
           ssh_keys:
             type: list
             required: false
@@ -91,7 +91,7 @@ argument_specs:
             type: dict
             required: false
             description:
-              - Sudoers configuration for this user. See mps.users.sudo for full semantics.
+              - Sudoers configuration for this user. See odem.users.sudo for full semantics.
             options:
               nopasswd:
                 type: bool

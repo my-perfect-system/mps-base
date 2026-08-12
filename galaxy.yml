@@ -1,21 +1,21 @@
 ---
-namespace: mps
+namespace: odem
 name: base
 version: 0.3.1
 readme: galaxy.yml
 authors:
   - foo <bar@baz.com>
-description: Shared conventions and dependency anchor for the mps.* collection ecosystem
+description: Shared conventions and dependency anchor for the odem.* collection ecosystem
 license:
   - GPL-3.0-or-later
 tags:
-  - mps
+  - odem
   - base
   - conventions
-repository: https://github.com/my-perfect-system/mps-base
-documentation: https://github.com/my-perfect-system/mps-base
-homepage: https://github.com/my-perfect-system/mps-base
-issues: https://github.com/my-perfect-system/mps-base/issues
+repository: https://github.com/my-perfect-system/odem-base
+documentation: https://github.com/my-perfect-system/odem-base
+homepage: https://github.com/my-perfect-system/odem-base
+issues: https://github.com/my-perfect-system/odem-base/issues
 build_ignore:
   .ansible-lint
   .yamllint

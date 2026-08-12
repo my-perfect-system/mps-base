@@ -1,12 +1,12 @@
 ---
-namespace: mps
+namespace: odem
 collection: base
 role: identity
 ---
 
-# `mps.base.identity`
+# `odem.base.identity`
 
-Shared identity model for the mps.* ecosystem
+Shared identity model for the odem.* ecosystem
 
 ## Default variables
 
@@ -34,7 +34,7 @@ None.
 ```yaml
 - hosts: all
   roles:
-    - mps.base.identity
+    - odem.base.identity
 ```
 
 ## Role metadata

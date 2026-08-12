@@ -9,4 +9,4 @@
   tasks:
     - name: Converge completed successfully
       ansible.builtin.debug:
-        msg: "Smoke test for mps.base.assert_debian13 passed (converge ran without error)."
+        msg: "Smoke test for odem.base.assert_debian13 passed (converge ran without error)."

@@ -3,13 +3,13 @@
 # Compiles into changelogs/changelog.yaml at release time.
 minor_changes:
   - |
-    Three new filter plugins in `mps-base/filter_plugins/mps_filter_users.py` for the per-user identity model:
+    Three new filter plugins in `odem-base/filter_plugins/odem_filter_users.py` for the per-user identity model:
   - |
-      - `mps_resolve_users(users_list, users_catalog)` produces `identity_users_resolved` from raw inputs
+      - `odem_resolve_users(users_list, users_catalog)` produces `identity_users_resolved` from raw inputs
   - |
-      - `mps_user_groups(users)` flattens each user's `group`/`groups` into a deduplicated list
+      - `odem_user_groups(users)` flattens each user's `group`/`groups` into a deduplicated list
   - |
-      - `mps_filter_users(users, role_key, state='present')` filters `identity_users_resolved` by `user_roles.<key>` (skips empty dicts)
+      - `odem_filter_users(users, role_key, state='present')` filters `identity_users_resolved` by `user_roles.<key>` (skips empty dicts)
   - |
-    All seven `mps-development` roles and the per-user `mps-desktop` roles now use `mps_filter_users` instead of inline `when:` blocks.
+    All seven `odem-development` roles and the per-user `odem-desktop` roles now use `odem_filter_users` instead of inline `when:` blocks.
 

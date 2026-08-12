@@ -13,5 +13,5 @@ galaxy_info:
     - debian13
     - trixie
     - assert
-    - mps-base
+    - odem-base
 dependencies: []

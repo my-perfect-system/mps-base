@@ -1,10 +1,10 @@
 ---
-# Shared conventions for all mps.* collections
+# Shared conventions for all odem.* collections
 
 # File permissions
-mps_default_file_mode: "0600"
-mps_default_dir_mode: "0700"
-mps_default_script_mode: "0700"
+odem_default_file_mode: "0600"
+odem_default_dir_mode: "0700"
+odem_default_script_mode: "0700"
 
 # Toggle variable pattern
 # Every yes/no subcomponent toggle uses: <role>_enable_<component>: bool

@@ -1,7 +1,7 @@
 ---
 # Shared resolve protocol for per-user roles.
 #
-# Per-user roles depend on mps.base.identity. This role:
+# Per-user roles depend on odem.base.identity. This role:
 #   1. Validates that each entry in users_list has a matching users_catalog entry
 #   2. Resolves users into a unified structure: identity_users_resolved
 #   3. Splits into present/absent lists
@@ -11,7 +11,7 @@
 # user_roles.<key> flag (e.g. terminal_bash, desktop_qtile) inline in its
 # task loops — no per-role resolve.yml needed.
 #
-# Data-shaping logic lives in mps-base/filter_plugins/mps_filter_users.py.
+# Data-shaping logic lives in odem-base/filter_plugins/odem_filter_users.py.
 # This file is just the orchestrator.
 #
 # Outputs:
@@ -39,7 +39,7 @@
 
 - name: Resolve users from catalog
   ansible.builtin.set_fact:
-    identity_users_resolved: "{{ users_list | mps_resolve_users(users_catalog) }}"
+    identity_users_resolved: "{{ users_list | odem_resolve_users(users_catalog) }}"
 
 - name: Split users into present and absent lists
   ansible.builtin.set_fact:
@@ -48,4 +48,4 @@
 
 - name: Extract group names from present users
   ansible.builtin.set_fact:
-    identity_user_groups: "{{ identity_users_present | mps_user_groups }}"
+    identity_user_groups: "{{ identity_users_present | odem_user_groups }}"

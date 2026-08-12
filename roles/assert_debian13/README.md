@@ -1,10 +1,10 @@
 ---
-namespace: mps
+namespace: odem
 collection: base
 role: assert_debian13
 ---
 
-# `mps.base.assert_debian13`
+# `odem.base.assert_debian13`
 
 Fail-fast assertion that target host is Debian 13 (trixie).
 
@@ -17,7 +17,7 @@ None.
 ```yaml
 - hosts: all
   roles:
-    - mps.base.assert_debian13
+    - odem.base.assert_debian13
 ```
 
 ## Role metadata
