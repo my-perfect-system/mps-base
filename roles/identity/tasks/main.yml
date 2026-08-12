@@ -5,6 +5,7 @@
 #   1. Validates that each entry in users_list has a matching users_catalog entry
 #   2. Resolves users into a unified structure: identity_users_resolved
 #   3. Splits into present/absent lists
+#   4. Extracts per-user group names into a flat, deduplicated list
 #
 # Each consuming role then filters identity_users_resolved by its own
 # user_roles.<key> flag (e.g. terminal_bash, desktop_qtile) inline in its
@@ -19,6 +20,8 @@
 #     - ...all other fields from the catalog entry are preserved
 #   identity_users_present   — identity_users_resolved filtered to state == 'present'
 #   identity_users_absent    — identity_users_resolved filtered to state == 'absent'
+#   identity_user_groups     — flat, deduplicated list of all group names referenced
+#                              by present users (from their `group` and `groups` fields)
 
 - name: IDENTITY - Validate users_catalog references
   ansible.builtin.assert:
@@ -51,3 +54,17 @@
   ansible.builtin.set_fact:
     identity_users_present: "{{ identity_users_resolved | selectattr('state', 'equalto', 'present') | list }}"
     identity_users_absent: "{{ identity_users_resolved | selectattr('state', 'equalto', 'absent') | list }}"
+
+- name: IDENTITY - Extract group names from present users
+  ansible.builtin.set_fact:
+    identity_user_groups: >-
+      {%- set names = [] -%}
+      {%- for u in identity_users_present -%}
+      {%-   if u.group is defined -%}
+      {%-     set _ = names.append(u.group) -%}
+      {%-   endif -%}
+      {%-   for g in (u.groups | default([])) -%}
+      {%-     set _ = names.append(g) -%}
+      {%-   endfor -%}
+      {%- endfor -%}
+      {{ names | unique }}
