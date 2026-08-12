@@ -5,6 +5,5 @@ releases:
     changes:
       release_summary: |
         Refactor + documentation + tests pass — pure code organization, no behavior changes.
-        See `manage/COMPLEXITY.md` for the full refactor TODO tracker.
       minor_changes:
         - "See changelogs/fragments/*.yml for the per-collection breakdown."

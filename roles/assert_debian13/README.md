@@ -1,6 +1,4 @@
 ---
-# Reference doc — auto-generated, do not edit by hand.
-# Regenerate via: python3 manage/gen_role_readmes.py
 namespace: mps
 collection: base
 role: assert_debian13
