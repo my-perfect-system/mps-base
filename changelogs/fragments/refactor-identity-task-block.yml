@@ -1,0 +1,7 @@
+---
+# Fragment for the refactor pass.
+# Compiles into changelogs/changelog.yaml at release time.
+minor_changes:
+  - |
+    `mps.base.identity/tasks/main.yml` reduced from 70 to 51 lines; the two heavy Jinja data-shaping blocks (`catalog_entry | combine({...})` and the group-flattening loop) were moved into the filter plugin where they are unit-testable from plain Python.
+

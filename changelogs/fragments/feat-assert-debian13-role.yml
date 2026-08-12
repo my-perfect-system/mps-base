@@ -1,0 +1,7 @@
+---
+# Fragment for the refactor pass.
+# Compiles into changelogs/changelog.yaml at release time.
+minor_changes:
+  - |
+    New shared role `mps.base.assert_debian13` fails fast on non-Debian-13 hosts. Adopted as a meta dependency by every role that requires Debian 13 (mps-os/{package_manager,system_settings,system_tools}, mps-users/{groups,ssh,sudo,users}).
+
