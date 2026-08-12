@@ -23,7 +23,7 @@
 #   identity_user_groups     — flat, deduplicated list of all group names referenced
 #                              by present users (from their `group` and `groups` fields)
 
-- name: IDENTITY - Validate users_catalog references
+- name: Validate users_catalog references
   ansible.builtin.assert:
     that:
       - "item.name in users_catalog"
@@ -34,7 +34,7 @@
     label: "{{ item.name }}"
   when: item.state | default('present') == 'present'
 
-- name: IDENTITY - Resolve users from catalog
+- name: Resolve users from catalog
   ansible.builtin.set_fact:
     identity_users_resolved: >-
       {%- set result = [] -%}
@@ -50,12 +50,12 @@
       {%-   endfor -%}
       {{ result }}
 
-- name: IDENTITY - Split users into present/absent
+- name: Split users into present and absent lists
   ansible.builtin.set_fact:
     identity_users_present: "{{ identity_users_resolved | selectattr('state', 'equalto', 'present') | list }}"
     identity_users_absent: "{{ identity_users_resolved | selectattr('state', 'equalto', 'absent') | list }}"
 
-- name: IDENTITY - Extract group names from present users
+- name: Extract group names from present users
   ansible.builtin.set_fact:
     identity_user_groups: >-
       {%- set names = [] -%}
