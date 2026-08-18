@@ -32,33 +32,36 @@ user_password: "changeme"
 # ---------------------------------------------------------------------------
 # user_roles_default — global default per-user role set
 # ---------------------------------------------------------------------------
-user_roles_default:
-  terminal_bash: true
-  terminal_vim: true
-  terminal_nvim: true
-  terminal_tmux: true
-  terminal_kitty: true
-  terminal_python: true
-  terminal_rust: true
-  terminal_scripts: true
-  desktop_essentials: true
-  desktop_wm: true
-  desktop_rofi: true
-  desktop_qtile: true
-  desktop_thunar: true
-  desktop_kanata: true
-  backup_backup: true
-  development_opencode: true
-  development_lmstudio: true
-  development_espidf: true
-  development_dotnet: true
-  development_java: true
-  development_latex: true
-  development_unity: true
+# user_roles_default:
+#   terminal_bash: true
+#   terminal_vim: true
+#   terminal_nvim: true
+#   terminal_tmux: true
+#   terminal_kitty: true
+#   terminal_python: true
+#   terminal_rust: true
+#   terminal_scripts: true
+#   desktop_essentials: true
+#   desktop_wm: true
+#   desktop_rofi: true
+#   desktop_qtile: true
+#   desktop_thunar: true
+#   desktop_kanata: true
+#   backup_backup: true
+#   development_opencode: true
+#   development_lmstudio: true
+#   development_espidf: true
+#   development_dotnet: true
+#   development_java: true
+#   development_latex: true
+#   development_unity: true
+#
+# user_roles_minimal:
+#   terminal_bash: true
+#   terminal_vim: true
+user_roles_default: []
+user_roles_minimal: []
 
-user_roles_minimal:
-  terminal_bash: true
-  terminal_vim: true
 
 # ---------------------------------------------------------------------------
 # users_catalog — identity catalog (empty by default, override per host)

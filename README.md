@@ -54,7 +54,7 @@ Then in your role tasks, iterate the resolved users:
 ```yaml
 - name: Do per-user thing
   ansible.builtin.command: ...
-  loop: "{{ identity_users_resolved | odem_filter_users('your_role_key') }}"
+  loop: "{{ identity_users_resolved | odem.base.odem_filter_users('your_role_key') }}"
   loop_control:
     label: "{{ item.name }}"
 ```
