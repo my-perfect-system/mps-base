@@ -20,11 +20,12 @@ helpers (`odem.base.assert_debian13`). All leaves depend on this.
 
 ## Filter plugins
 
-`plugins/filter/odem_filter_users.py` — three small functions:
+One filter per file in `plugins/filter/` (the only location Ansible
+auto-loads collection filter plugins from; each file carries its own
+`DOCUMENTATION`/`EXAMPLES`/`RETURN` so `ansible-doc` and Galaxy's
+importer accept them):
 
-Filters live under the collection's `plugins/filter/` directory (the only
-location Ansible auto-loads collection filter plugins from). They are
-referenced fully-qualified in templates — `odem.base.odem_<name>` —
+Filters are referenced fully-qualified in templates — `odem.base.odem_<name>` —
 because Ansible does not resolve bare filter names via a play's
 `collections:` list. Bare references break at runtime with
 `No filter named 'odem_*'`.

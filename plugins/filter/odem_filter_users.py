@@ -3,27 +3,62 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"""Identity filter plugins for the odem.base.identity resolve protocol.
-
-Replaces the heavy Jinja2 data-shaping blocks that used to live in
-`roles/identity/tasks/main.yml`. Each filter is a small, testable
-function. The role's tasks are now a thin orchestrator that calls:
-
-  - ``odem_resolve_users(users_list, users_catalog)`` — produces
-    ``identity_users_resolved`` (a unified list combining ``users_list``
-    entries with their matching ``users_catalog`` fields).
-  - ``odem_user_groups(users)`` — produces a flat, deduplicated list of
-    all group names referenced by each user's ``group`` and ``groups``
-    fields.
-
-The per-user role filter ``odem_filter_users`` is also defined here so
-the entire identity/filter_plugins surface lives in one module.
-"""
+"""odem_filter_users — per-user role opt-in filter for the odem.base.identity model."""
 
 from __future__ import annotations
 
+DOCUMENTATION = r"""
+name: odem_filter_users
+short_description: Filter resolved users by a user_roles opt-in flag
+version_added: 0.3.0
+author: my-perfect-system contributors
+description:
+  - Filters the list produced by C(odem.base.odem_resolve_users) (typically
+    stored in the C(identity_users_resolved) fact) to present users that opted
+    into a specific C(user_roles) key.
+  - Used by per-user roles to loop only over users that enabled a given role
+    (for example C(terminal_bash), C(development_opencode)).
+  - Empty or falsy entries in the input list are skipped internally.
+positional: role_key
+options:
+  _input:
+    description: A list of resolved user dicts, typically C(identity_users_resolved).
+    type: list
+    elements: dict
+    required: true
+  role_key:
+    description:
+      - The C(user_roles) key to filter on (for example C(terminal_bash)).
+      - When omitted, no role filtering is applied.
+    type: str
+    required: false
+  state:
+    description:
+      - Only keep users whose C(state) matches this value.
+      - Set to C(null) to disable state filtering and keep all users.
+    type: str
+    default: present
+    choices: [present, absent]
+"""
 
-def _odem_filter_users(users, role_key=None, state="present"):
+EXAMPLES = r"""
+- name: Configure bash only for users that opted into terminal_bash
+  ansible.builtin.debug:
+    msg: "configuring bash for {{ entity.name }}"
+  loop: "{{ identity_users_resolved | odem.base.odem_filter_users('terminal_bash') }}"
+  loop_control:
+    loop_var: entity
+"""
+
+RETURN = r"""
+_value:
+  description: A list of user dicts matching the requested role key and state.
+  type: list
+  elements: dict
+"""
+
+
+def odem_filter_users(users, role_key=None, state="present"):
     if not users:
         return []
     filtered = [u for u in users if u]
@@ -34,43 +69,6 @@ def _odem_filter_users(users, role_key=None, state="present"):
     return filtered
 
 
-def _odem_resolve_users(users_list, users_catalog):
-    if not users_list:
-        return []
-    catalog = users_catalog or {}
-    resolved = []
-    for entry in users_list:
-        if not entry or "name" not in entry:
-            continue
-        catalog_entry = catalog.get(entry["name"]) or {}
-        merged = dict(catalog_entry)
-        merged["id"] = entry["name"]
-        merged["name"] = catalog_entry.get("name", entry["name"])
-        merged["state"] = entry.get("state", "present")
-        merged["user_roles"] = catalog_entry.get("user_roles", {}) or {}
-        resolved.append(merged)
-    return resolved
-
-
-def _odem_user_groups(users):
-    if not users:
-        return []
-    names = []
-    for u in users:
-        if not u:
-            continue
-        if u.get("group"):
-            names.append(u["group"])
-        for g in u.get("groups") or []:
-            names.append(g)
-    seen = set()
-    return [n for n in names if not (n in seen or seen.add(n))]
-
-
 class FilterModule:
     def filters(self):
-        return {
-            "odem_filter_users": _odem_filter_users,
-            "odem_resolve_users": _odem_resolve_users,
-            "odem_user_groups": _odem_user_groups,
-        }
+        return {"odem_filter_users": odem_filter_users}

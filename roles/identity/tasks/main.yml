@@ -11,7 +11,9 @@
 # user_roles.<key> flag (e.g. terminal_bash, desktop_qtile) inline in its
 # task loops — no per-role resolve.yml needed.
 #
-# Data-shaping logic lives in odem-base/plugins/filter/odem_filter_users.py.
+# Data-shaping logic lives in odem-base/plugins/filter/ (one filter per file:
+# odem_resolve_users.py, odem_user_groups.py; odem_filter_users.py is the
+# per-user-role opt-in filter used by leaf collections).
 # This file is just the orchestrator.
 #
 # Outputs:
